@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  duckdb-challenge:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: duckdb-billion-row
+    environment:
+      - ROW_COUNT=1000000000  # Set to 1 billion rows
+    volumes:
+      - ./data:/app/data
+      - ./scripts:/app/scripts
+    # Allocate more memory - use as much as your system can spare
+    mem_limit: 28g  # Allocate 28GB to the container, leaving some for host OS
+    # Use all available CPU cores
+    cpus: 8.0
+    stdin_open: true
+    tty: true
+    entrypoint: ["/bin/bash"]
+    command: ["-c", "pip install matplotlib pandas psutil && python3 billion_row_challenge.py"]
